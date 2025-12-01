@@ -348,6 +348,30 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("showOpenDialog", options),
   showItemInFolder: (path: string) =>
     ipcRenderer.invoke("showItemInFolder", path),
+
+  /* LevelDB */
+  leveldb: {
+    get: (
+      key: string,
+      sublevelName?: string | null,
+      valueEncoding?: "json" | "utf8"
+    ) => ipcRenderer.invoke("leveldbGet", key, sublevelName, valueEncoding),
+    put: (
+      key: string,
+      value: unknown,
+      sublevelName?: string | null,
+      valueEncoding?: "json" | "utf8"
+    ) =>
+      ipcRenderer.invoke("leveldbPut", key, value, sublevelName, valueEncoding),
+    del: (key: string, sublevelName?: string | null) =>
+      ipcRenderer.invoke("leveldbDel", key, sublevelName),
+    clear: (sublevelName: string) =>
+      ipcRenderer.invoke("leveldbClear", sublevelName),
+    values: (sublevelName: string) =>
+      ipcRenderer.invoke("leveldbValues", sublevelName),
+    iterator: (sublevelName: string) =>
+      ipcRenderer.invoke("leveldbIterator", sublevelName),
+  },
   getCommunities: () => ipcRenderer.invoke("getCommunities"),
   onCommunitiesRefreshed: (cb: (communities: Community[]) => void) => {
     const listener = (

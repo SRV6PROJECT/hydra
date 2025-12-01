@@ -508,6 +508,27 @@ declare global {
     onNewDownloadOptions: (
       cb: (gamesWithNewOptions: { gameId: string; count: number }[]) => void
     ) => () => Electron.IpcRenderer;
+
+    /* LevelDB */
+    leveldb: {
+      get: (
+        key: string,
+        sublevelName?: string | null,
+        valueEncoding?: "json" | "utf8"
+      ) => Promise<unknown>;
+      put: (
+        key: string,
+        value: unknown,
+        sublevelName?: string | null,
+        valueEncoding?: "json" | "utf8"
+      ) => Promise<void>;
+      del: (key: string, sublevelName?: string | null) => Promise<void>;
+      clear: (sublevelName: string) => Promise<void>;
+      values: (sublevelName: string) => Promise<unknown[]>;
+      iterator: (
+        sublevelName: string
+      ) => Promise<[key: string, value: unknown][]>;
+    };
   }
 
   interface Window {

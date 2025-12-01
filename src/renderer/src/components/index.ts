@@ -7,6 +7,7 @@ export * from "./hero/hero";
 export * from "./modal/modal";
 export * from "./sidebar/sidebar";
 export * from "./text-field/text-field";
+export * from "./text-area-field/text-area-field";
 export * from "./checkbox-field/checkbox-field";
 export * from "./link/link";
 export * from "./select-field/select-field";

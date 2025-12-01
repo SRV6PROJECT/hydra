@@ -3,7 +3,7 @@ import { communitiesSublevel } from "@main/level";
 import { getUserData } from "@main/services/user/get-user-data";
 import fs from "node:fs";
 import type { Community } from "@types";
-import { CommunityApi } from "@main/services";
+import { CommunityApi, logger } from "@main/services";
 
 const updateCommunity = async (
   _event: Electron.IpcMainInvokeEvent,
@@ -27,15 +27,17 @@ const updateCommunity = async (
       const mime = low.endsWith(".svg")
         ? "image/svg+xml"
         : low.endsWith(".jpg") || low.endsWith(".jpeg")
-        ? "image/jpeg"
-        : low.endsWith(".webp")
-        ? "image/webp"
-        : low.endsWith(".gif")
-        ? "image/gif"
-        : "image/png";
+          ? "image/jpeg"
+          : low.endsWith(".webp")
+            ? "image/webp"
+            : low.endsWith(".gif")
+              ? "image/gif"
+              : "image/png";
       payload["avatarBase64"] = `data:${mime};base64,${buf.toString("base64")}`;
       delete payload["avatarUrl"];
-    } catch {}
+    } catch (error) {
+      logger.error("Failed to read community avatar file", error);
+    }
   }
   if (coverImageUrl.startsWith("local:")) {
     const p = coverImageUrl.replace("local:", "");
@@ -45,15 +47,17 @@ const updateCommunity = async (
       const mime = low.endsWith(".svg")
         ? "image/svg+xml"
         : low.endsWith(".jpg") || low.endsWith(".jpeg")
-        ? "image/jpeg"
-        : low.endsWith(".webp")
-        ? "image/webp"
-        : low.endsWith(".gif")
-        ? "image/gif"
-        : "image/png";
+          ? "image/jpeg"
+          : low.endsWith(".webp")
+            ? "image/webp"
+            : low.endsWith(".gif")
+              ? "image/gif"
+              : "image/png";
       payload["coverBase64"] = `data:${mime};base64,${buf.toString("base64")}`;
       delete payload["coverImageUrl"];
-    } catch {}
+    } catch (error) {
+      logger.error("Failed to read community cover file", error);
+    }
   }
   const remoteUpdated = await CommunityApi.patch<Community>(
     `/communities/${id}`,

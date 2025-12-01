@@ -16,6 +16,7 @@ export interface ModalProps {
   large?: boolean;
   children: React.ReactNode;
   clickOutsideToClose?: boolean;
+  fullScroll?: boolean;
 }
 
 export function Modal({
