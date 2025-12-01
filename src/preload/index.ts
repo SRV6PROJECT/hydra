@@ -1,6 +1,7 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 import { contextBridge, ipcRenderer } from "electron";
+import type { Community } from "@types";
 
 import type {
   GameShop,
@@ -347,6 +348,55 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("showOpenDialog", options),
   showItemInFolder: (path: string) =>
     ipcRenderer.invoke("showItemInFolder", path),
+  getCommunities: () => ipcRenderer.invoke("getCommunities"),
+  onCommunitiesRefreshed: (cb: (communities: Community[]) => void) => {
+    const listener = (
+      _event: Electron.IpcRendererEvent,
+      communities: Community[]
+    ) => cb(communities);
+    ipcRenderer.on("on-communities-refreshed", listener);
+    return () =>
+      ipcRenderer.removeListener("on-communities-refreshed", listener);
+  },
+  createCommunity: (name: string, description: string) =>
+    ipcRenderer.invoke("createCommunity", name, description),
+  getCommunityById: (id: string) => ipcRenderer.invoke("getCommunityById", id),
+  updateCommunity: (id: string, partial: Record<string, unknown>) =>
+    ipcRenderer.invoke("updateCommunity", id, partial),
+  addCommunityMember: (
+    communityId: string,
+    member: {
+      displayName: string;
+      profileImageUrl?: string | null;
+      isOnline?: boolean;
+      currentGame?: { title: string; objectId: string; shop: string } | null;
+    }
+  ) => ipcRenderer.invoke("addCommunityMember", communityId, member),
+  removeCommunityMember: (communityId: string, memberId: string) =>
+    ipcRenderer.invoke("removeCommunityMember", communityId, memberId),
+  updateCommunityMember: (
+    communityId: string,
+    memberId: string,
+    partial: Record<string, unknown>
+  ) =>
+    ipcRenderer.invoke("updateCommunityMember", communityId, memberId, partial),
+  addCommunityPost: (
+    communityId: string,
+    post: {
+      authorId: string;
+      authorDisplayName: string;
+      authorProfileImageUrl?: string | null;
+      content: string;
+    }
+  ) => ipcRenderer.invoke("addCommunityPost", communityId, post),
+  removeCommunityPost: (communityId: string, postId: string) =>
+    ipcRenderer.invoke("removeCommunityPost", communityId, postId),
+  joinCommunity: (communityId: string) =>
+    ipcRenderer.invoke("joinCommunity", communityId),
+  leaveCommunity: (communityId: string) =>
+    ipcRenderer.invoke("leaveCommunity", communityId),
+  deleteCommunity: (communityId: string) =>
+    ipcRenderer.invoke("deleteCommunity", communityId),
   hydraApi: {
     get: (
       url: string,
@@ -432,6 +482,61 @@ contextBridge.exposeInMainWorld("electron", {
           needsAuth: options?.needsAuth,
           needsSubscription: options?.needsSubscription,
         },
+      }),
+  },
+  communityApi: {
+    get: (
+      url: string,
+      options?: {
+        params?: unknown;
+        ifModifiedSince?: Date;
+      }
+    ) =>
+      ipcRenderer.invoke("communityApiCall", {
+        method: "get",
+        url,
+        params: options?.params,
+        options: {
+          ifModifiedSince: options?.ifModifiedSince,
+        },
+      }),
+    post: (
+      url: string,
+      options?: {
+        data?: unknown;
+      }
+    ) =>
+      ipcRenderer.invoke("communityApiCall", {
+        method: "post",
+        url,
+        data: options?.data,
+      }),
+    put: (
+      url: string,
+      options?: {
+        data?: unknown;
+      }
+    ) =>
+      ipcRenderer.invoke("communityApiCall", {
+        method: "put",
+        url,
+        data: options?.data,
+      }),
+    patch: (
+      url: string,
+      options?: {
+        data?: unknown;
+      }
+    ) =>
+      ipcRenderer.invoke("communityApiCall", {
+        method: "patch",
+        url,
+        data: options?.data,
+      }),
+    delete: (url: string) =>
+      ipcRenderer.invoke("communityApiCall", {
+        method: "delete",
+        url,
       }),
   },
   canInstallCommonRedist: () => ipcRenderer.invoke("canInstallCommonRedist"),
@@ -619,28 +724,4 @@ contextBridge.exposeInMainWorld("electron", {
   },
   closeEditorWindow: (themeId?: string) =>
     ipcRenderer.invoke("closeEditorWindow", themeId),
-
-  /* LevelDB Generic CRUD */
-  leveldb: {
-    get: (
-      key: string,
-      sublevelName?: string | null,
-      valueEncoding?: "json" | "utf8"
-    ) => ipcRenderer.invoke("leveldbGet", key, sublevelName, valueEncoding),
-    put: (
-      key: string,
-      value: unknown,
-      sublevelName?: string | null,
-      valueEncoding?: "json" | "utf8"
-    ) =>
-      ipcRenderer.invoke("leveldbPut", key, value, sublevelName, valueEncoding),
-    del: (key: string, sublevelName?: string | null) =>
-      ipcRenderer.invoke("leveldbDel", key, sublevelName),
-    clear: (sublevelName: string) =>
-      ipcRenderer.invoke("leveldbClear", sublevelName),
-    values: (sublevelName: string) =>
-      ipcRenderer.invoke("leveldbValues", sublevelName),
-    iterator: (sublevelName: string) =>
-      ipcRenderer.invoke("leveldbIterator", sublevelName),
-  },
 });

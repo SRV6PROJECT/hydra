@@ -21,7 +21,6 @@ import resources from "@locales";
 
 import { logger } from "./logger";
 import { addCookieInterceptor } from "./cookies";
-import { levelDBService } from "./services/leveldb.service";
 import Catalogue from "./pages/catalogue/catalogue";
 import Home from "./pages/home/home";
 import Downloads from "./pages/downloads/downloads";
@@ -32,6 +31,8 @@ import Achievements from "./pages/achievements/achievements";
 import ThemeEditor from "./pages/theme-editor/theme-editor";
 import Library from "./pages/library/library";
 import { AchievementNotification } from "./pages/achievements/notification/achievement-notification";
+import Communities from "./pages/communities/communities";
+import CommunityDetails from "./pages/communities/community-details";
 
 console.log = logger.log;
 
@@ -49,11 +50,7 @@ i18n
     },
   })
   .then(async () => {
-    const userPreferences = (await levelDBService.get(
-      "userPreferences",
-      null,
-      "json"
-    )) as { language?: string } | null;
+    const userPreferences = await window.electron.getUserPreferences();
 
     if (userPreferences?.language) {
       i18n.changeLanguage(userPreferences.language);
@@ -72,6 +69,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/catalogue" element={<Catalogue />} />
             <Route path="/library" element={<Library />} />
             <Route path="/downloads" element={<Downloads />} />
+            <Route path="/communities" element={<Communities />} />
+            <Route path="/communities/:id" element={<CommunityDetails />} />
             <Route path="/game/:shop/:objectId" element={<GameDetails />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile/:userId" element={<Profile />} />

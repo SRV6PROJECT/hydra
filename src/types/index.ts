@@ -1,6 +1,13 @@
 import type { Cracker, DownloadSourceStatus, Downloader } from "@shared";
 import type { SteamAppDetails } from "./steam.types";
-import type { Download, Game, Subscription } from "./level.types";
+import type {
+  Download,
+  Game,
+  Subscription,
+  Community,
+  CommunityMember,
+  CommunityPost,
+} from "./level.types";
 import type { GameShop, UnlockedAchievement } from "./game.types";
 
 export type FriendRequestAction = "ACCEPTED" | "REFUSED" | "CANCEL";
@@ -57,6 +64,9 @@ export type ShopDetails = SteamAppDetails & {
 export type ShopDetailsWithAssets = ShopDetails & {
   assets: ShopAssets | null;
 };
+
+export type { Community };
+export type { CommunityMember, CommunityPost };
 
 export interface TorrentFile {
   path: string;

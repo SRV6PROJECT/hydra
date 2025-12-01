@@ -29,6 +29,7 @@ import type {
   AchievementCustomNotificationPosition,
   AchievementNotificationInfo,
   Game,
+  Community,
   DiskUsage,
   DownloadSource,
 } from "@types";
@@ -278,6 +279,47 @@ declare global {
       options: Electron.OpenDialogOptions
     ) => Promise<Electron.OpenDialogReturnValue>;
     showItemInFolder: (path: string) => Promise<void>;
+    getCommunities: () => Promise<Community[]>;
+    createCommunity: (name: string, description: string) => Promise<Community>;
+    getCommunityById: (id: string) => Promise<Community>;
+    updateCommunity: (
+      id: string,
+      partial: Record<string, unknown>
+    ) => Promise<Community>;
+    addCommunityMember: (
+      communityId: string,
+      member: {
+        displayName: string;
+        profileImageUrl?: string | null;
+        isOnline?: boolean;
+        currentGame?: { title: string; objectId: string; shop: string } | null;
+      }
+    ) => Promise<CommunityMember>;
+    removeCommunityMember: (
+      communityId: string,
+      memberId: string
+    ) => Promise<boolean>;
+    updateCommunityMember: (
+      communityId: string,
+      memberId: string,
+      partial: Record<string, unknown>
+    ) => Promise<CommunityMember | null>;
+    addCommunityPost: (
+      communityId: string,
+      post: {
+        authorId: string;
+        authorDisplayName: string;
+        authorProfileImageUrl?: string | null;
+        content: string;
+      }
+    ) => Promise<CommunityPost>;
+    removeCommunityPost: (
+      communityId: string,
+      postId: string
+    ) => Promise<boolean>;
+    joinCommunity: (communityId: string) => Promise<Community>;
+    leaveCommunity: (communityId: string) => Promise<Community>;
+    deleteCommunity: (communityId: string) => Promise<boolean>;
     hydraApi: {
       get: <T = unknown>(
         url: string,
@@ -319,6 +361,34 @@ declare global {
           needsSubscription?: boolean;
         }
       ) => Promise<T>;
+    };
+    communityApi: {
+      get: <T = unknown>(
+        url: string,
+        options?: {
+          params?: unknown;
+          ifModifiedSince?: Date;
+        }
+      ) => Promise<T>;
+      post: <T = unknown>(
+        url: string,
+        options?: {
+          data?: unknown;
+        }
+      ) => Promise<T>;
+      put: <T = unknown>(
+        url: string,
+        options?: {
+          data?: unknown;
+        }
+      ) => Promise<T>;
+      patch: <T = unknown>(
+        url: string,
+        options?: {
+          data?: unknown;
+        }
+      ) => Promise<T>;
+      delete: <T = unknown>(url: string) => Promise<T>;
     };
     canInstallCommonRedist: () => Promise<boolean>;
     installCommonRedist: () => Promise<void>;
@@ -438,25 +508,6 @@ declare global {
     onNewDownloadOptions: (
       cb: (gamesWithNewOptions: { gameId: string; count: number }[]) => void
     ) => () => Electron.IpcRenderer;
-
-    /* LevelDB Generic CRUD */
-    leveldb: {
-      get: (
-        key: string,
-        sublevelName?: string | null,
-        valueEncoding?: "json" | "utf8"
-      ) => Promise<unknown>;
-      put: (
-        key: string,
-        value: unknown,
-        sublevelName?: string | null,
-        valueEncoding?: "json" | "utf8"
-      ) => Promise<void>;
-      del: (key: string, sublevelName?: string | null) => Promise<void>;
-      clear: (sublevelName: string) => Promise<void>;
-      values: (sublevelName: string) => Promise<unknown[]>;
-      iterator: (sublevelName: string) => Promise<[string, unknown][]>;
-    };
   }
 
   interface Window {

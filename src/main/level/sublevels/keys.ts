@@ -20,4 +20,6 @@ export const levelKeys = {
   downloadSources: "downloadSources",
   downloadSourcesCheckBaseline: "downloadSourcesCheckBaseline", // When we last started the app
   downloadSourcesSinceValue: "downloadSourcesSinceValue", // The 'since' value API used (for modal comparison)
+  communities: "communities",
+  community: (id: string) => `community:${id}`,
 };

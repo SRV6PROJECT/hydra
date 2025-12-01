@@ -1,0 +1,325 @@
+@use "../../scss/globals.scss";
+
+.communities {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(globals.$spacing-unit * 2) calc(globals.$spacing-unit * 2) calc(globals.$spacing-unit * 3) calc(globals.$spacing-unit * 2);
+  }
+
+  &__header-left {
+    display: flex;
+    align-items: center;
+    gap: calc(globals.$spacing-unit * 2);
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    margin-right: calc(globals.$spacing-unit * 2);
+  }
+
+  &__filters {
+    display: flex;
+    gap: calc(globals.$spacing-unit);
+    position: relative;
+
+    &-tab-wrapper {
+      position: relative;
+    }
+
+    &-tab {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      padding: calc(globals.$spacing-unit) calc(globals.$spacing-unit * 2);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color ease 0.2s;
+      display: flex;
+      align-items: center;
+      gap: calc(globals.$spacing-unit * 0.5);
+
+      &--active {
+        color: white;
+      }
+    }
+
+    &-tab-underline {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: white;
+    }
+
+    &-tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 6px;
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1;
+      margin-left: calc(globals.$spacing-unit * 0.5);
+    }
+  }
+
+  &__categories {
+    display: flex;
+    gap: globals.$spacing-unit;
+    padding: 0 calc(globals.$spacing-unit * 3);
+    margin-bottom: calc(globals.$spacing-unit * 2);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: calc(globals.$spacing-unit * 2);
+    transition: all ease 0.2s;
+    padding: 0 calc(globals.$spacing-unit * 2) calc(globals.$spacing-unit * 3);
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1250px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (min-width: 1600px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  &__card {
+    background-color: globals.$background-color;
+    border: 1px solid globals.$border-color;
+    border-radius: 8px;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  &__card-header {
+    display: flex;
+    align-items: center;
+    gap: calc(globals.$spacing-unit * 2);
+  }
+
+  &__card-header--bottom {
+    margin-top: auto;
+  }
+
+  &__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+
+  &__avatar--placeholder {
+    background: linear-gradient(135deg, rgba(22, 177, 149, 0.3), rgba(62, 98, 192, 0.15));
+  }
+
+  &__card-title {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  &__description {
+    color: globals.$muted-color;
+  }
+
+  &__card--clickable {
+    cursor: pointer;
+    text-align: left;
+  }
+
+  &__banner {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__banner--placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(120% 120% at 0% 100%, rgba(globals.$brand-teal, 0.18) 0%, rgba(globals.$brand-teal, 0) 60%),
+      radial-gradient(120% 120% at 100% 0%, rgba(globals.$brand-blue, 0.18) 0%, rgba(globals.$brand-blue, 0) 60%),
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 2px, transparent 2px, transparent 6px),
+      linear-gradient(135deg, rgba(55, 55, 55, 0.7), rgba(18, 18, 18, 0.6));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  &__banner--placeholder::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(80% 40% at 50% 100%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
+  }
+
+  &__banner--placeholder::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: conic-gradient(from 180deg at 0% 100%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 60%);
+  }
+
+  &__avatar--generated {
+    border-radius: 0;
+    display: block;
+    width: 30px;
+    height: 30px;
+  }
+
+  &__identicon-cell--a {
+    fill: rgba(globals.$brand-teal, 0.85);
+  }
+
+  &__identicon-cell--b {
+    fill: rgba(globals.$brand-blue, 0.85);
+  }
+
+  &__title-block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__members {
+    color: globals.$muted-color;
+    font-size: 13px;
+  }
+
+  &__card-footer {
+    display: none;
+  }
+
+  &__badge {
+    background-color: rgba(34, 197, 94, 0.15);
+    color: rgb(187, 247, 208);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 6px;
+    border-radius: 6px;
+    display: flex;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.5);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: globals.$spacing-unit;
+  }
+
+  &__form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: globals.$spacing-unit;
+  }
+
+  &__placeholder {
+    color: globals.$muted-color;
+  }
+
+  &__card-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: calc(globals.$spacing-unit * 2);
+    z-index: 1;
+  }
+
+  &__card-content::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 70%;
+    background: linear-gradient(
+      to top,
+      rgba(globals.$background-color, 0.95) 0%,
+      rgba(globals.$background-color, 0.85) 40%,
+      rgba(globals.$background-color, 0.6) 70%,
+      rgba(globals.$background-color, 0.35) 88%,
+      rgba(globals.$background-color, 0) 100%
+    );
+    z-index: 0;
+  }
+
+  &__card-content > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__overlay-badge {
+    position: absolute;
+    top: calc(globals.$spacing-unit * 2);
+    left: calc(globals.$spacing-unit * 2);
+    z-index: 2;
+  }
+
+  &__overlay-badges {
+    position: absolute;
+    top: calc(globals.$spacing-unit * 2);
+    left: calc(globals.$spacing-unit * 2);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(globals.$spacing-unit);
+
+    .badge {
+      background: rgba(0, 0, 0, 0.28);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
+  &__overlay-badge {
+    .badge {
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+  }
+  &__card-content {
+    & .communities__members {
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  &__card-title--light {
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+}

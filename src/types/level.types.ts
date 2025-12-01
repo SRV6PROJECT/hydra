@@ -124,6 +124,8 @@ export interface UserPreferences {
   enableSteamAchievements?: boolean;
   autoplayGameTrailers?: boolean;
   hideToTrayOnGameStart?: boolean;
+  showSidebarLibrary?: boolean;
+  showSidebarFavorites?: boolean;
 }
 
 export interface ScreenState {
@@ -132,4 +134,63 @@ export interface ScreenState {
   height: number;
   width: number;
   isMaximized: boolean;
+}
+
+export interface Community {
+  id: string;
+  name: string;
+  description: string;
+  ownerId?: string;
+  avatarUrl?: string | null;
+  coverImageUrl?: string | null;
+  membersCount?: number;
+  createdAt?: string;
+  members?: CommunityMember[];
+  posts?: CommunityPost[];
+  isOfficial?: boolean;
+  isClosed?: boolean;
+  serverTag?: string | null;
+  languages?: string[];
+  games?: Array<{
+    title: string;
+    objectId: string;
+    shop: GameShop;
+  }>;
+  events?: CommunityEvent[];
+}
+
+export interface CommunityMember {
+  id: string;
+  displayName: string;
+  profileImageUrl: string | null;
+  isOnline?: boolean;
+  currentGame?: {
+    title: string;
+    objectId: string;
+    shop: GameShop;
+  } | null;
+}
+
+export interface CommunityPost {
+  id: string;
+  authorId: string;
+  authorDisplayName: string;
+  authorProfileImageUrl: string | null;
+  content: string;
+  createdAt: string;
+  upvotes?: number;
+  downvotes?: number;
+  hasUpvoted?: boolean;
+  hasDownvoted?: boolean;
+}
+
+export interface CommunityEvent {
+  id: string;
+  title: string;
+  date: string;
+  serverTag?: string | null;
+  upvotes?: number;
+  downvotes?: number;
+  hasUpvoted?: boolean;
+  hasDownvoted?: boolean;
 }

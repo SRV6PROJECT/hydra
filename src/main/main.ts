@@ -1,5 +1,5 @@
 import { downloadsSublevel } from "./level/sublevels/downloads";
-import { orderBy } from "lodash-es";
+import { sortBy } from "lodash-es";
 import { Downloader } from "@shared";
 import { levelKeys, db } from "./level";
 import type { UserPreferences } from "@types";
@@ -68,7 +68,7 @@ export const loadState = async () => {
     .values()
     .all()
     .then((games) => {
-      return orderBy(games, "timestamp", "desc");
+      return sortBy(games, "timestamp", "DESC");
     });
 
   downloads.forEach((download) => {
